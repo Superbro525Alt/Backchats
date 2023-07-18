@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+#root, html, body {
+  height: 100%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +40,327 @@
     transform: rotate(360deg);
   }
 }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: .2% .2%;
+  overflow: hidden;
+  background-color: #333;
+  height: 5.15%;
+}
+
+li {
+  float: left;
+  height: 100%;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 18px 18px;
+
+  text-decoration: none;
+}
+
+.UserButton {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 9px 11px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,70,1) 100%);
+  z-index: -1;
+  position: absolute;
+}
+
+.wrapper {
+  position: relative;
+  height: 100%;
+
+}
+
+.content {
+
+    text-align: center;
+  z-index: -1;
+  transform: translateY(25%) translateX(40%);
+
+}
+
+.leftsidebar {
+  width: 10%;
+  background-color: rgb(44, 44, 44);
+}
+
+.rightsidebar {
+  width: 10%;
+    background-color: rgb(44, 44, 44);
+}
+
+.main {
+  width: 80%;
+    background-color: rgb(79, 79, 79);
+  overflow-y: scroll;
+}
+
+.main:nth-child(1) {
+  width: 90%;
+    background-color: rgb(79, 79, 79);
+  overflow-y: scroll;
+}
+
+.bottom {
+  height: 10%;
+  background-color: rgb(26, 26, 26);
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: DodgerBlue;
+  height: 90%;
+}
+
+.menu_button {
+    width: 100%;
+    background-color: rgb(44, 44, 44);
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  padding: 18px 18px;
+  text-align: center;
+}
+
+.menu_button_round {
+    width: 100%;
+    background-color: rgb(44, 44, 44);
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  padding: 18px 18px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.menu_button_round:hover {
+    background-color: #111;
+}
+
+.menu_button:hover {
+    background-color: #111;
+}
+
+.holder {
+  padding: 0.5% 0.5%;
+}
+
+.notification_holder {
+  padding: 0.5% 0.5%;
+  border: 1px solid black;
+  border-radius: 5px;
+  color: white;
+  transition: 0.5s;
+  background-color: rgb(70, 70, 70);
+}
+
+.notification_holder:hover {
+  transition: 0.5s;
+  background-color: rgb(44, 44, 44);
+}
+
+.notification_image {
+  /*round edges*/
+    border-radius: 20%;
+  margin-right: 0.5%;
+  width: 3%;
+    height: 3%;
+}
+
+.notification_image_holder {
+  padding: 0.5% 0.5%;
+  display: flex;
+}
+
+.notification_text_holder {
+
+  border-top: 1px dashed white;
+}
+
+.notification_title {
+
+}
+
+.notification_message {
+
+}
+
+.inbox_sort {
+  margin: 5% 0;
+  padding: 5% 5%;
+  width: 100%;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  border: 1px solid rgb(44, 44, 44);
+  color: white;
+  margin-top: 0;
+}
+
+.inbox_sort:hover {
+  background-color: rgb(70, 70, 70);
+}
+
+.inbox_sort_text {
+    margin: 5% 0;
+    padding: 0 7%;
+  color: white;
+}
+.inbox_filter {
+  width: 100%;
+  padding: 5% 5%;
+  margin: 5% 0;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  border: 1px solid rgb(44, 44, 44);
+  color: white;
+}
+.inbox_filter:hover {
+  background-color: rgb(70, 70, 70);
+}
+
+.inbox_sort_holder {
+
+}
+
+
+.inbox_filter_holder {
+
+}
+
+.inbox_filter_text {
+    margin: 5% 0;
+    padding: 0 7%;
+  color: white;
+}
+
+.settings_scroll_button {
+
+}
+
+.settings_section_holder {
+  padding: 0.5% 0.5%;
+    margin: 1% 0.5%;
+  border: 1px solid black;
+    border-radius: 5px;
+}
+
+/* make first settings section have no top border */
+.settings_section_holder:first-child {
+  margin-top: 0.5%;
+}
+
+.settings_holder {
+  padding: 0.5% 0.5%;
+
+}
+
+.settings_section_title {
+  color: white;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.settings_section_text {
+  color: white;
+  font-size: 16px;
+  margin: 0;
+  padding: 0.5% 0;
+}
+
+.settings_section_text_header {
+  color: white;
+  font-size: 19px;
+  margin: 0;
+  padding-top: 0.5%;
+}
+
+.file_upload {
+
+}
+
+
+.file-upload-wrapper {
+  position: relative;
+  width: 20%;
+  height: 50px;
+}
+.file-upload-wrapper:after {
+  content: attr(data-text);
+  font-size: 18px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #5d5d5d;
+  padding: 10px 15px;
+  display: block;
+  width: calc(100% - 40px);
+  pointer-events: none;
+  z-index: 20;
+  height: 50%;
+  line-height: 27.5px;
+  color: #ffffff;
+  border-radius: 5px 10px 10px 5px;
+  font-weight: 300;
+
+}
+.file-upload-wrapper:before {
+  content: 'Upload';
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-block;
+  height: 45px;
+  background: #46795e;
+  color: #fff;
+  font-weight: 700;
+  z-index: 25;
+  font-size: 16px;
+  line-height: 45px;
+  padding: 0 15px;
+  text-transform: uppercase;
+  pointer-events: none;
+  border-radius: 0 5px 5px 0;
+}
+.file-upload-wrapper:hover:before {
+  background: #3d8c63;
+}
+.file-upload-wrapper input {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+
