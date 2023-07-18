@@ -114,12 +114,18 @@ li a:hover {
     background-color: rgb(79, 79, 79);
   overflow-y: scroll;
 }
-
+.main_normal {
+  width: 80%;
+    background-color: rgb(79, 79, 79);
+  overflow-y: scroll;
+}
 .main:nth-child(1) {
   width: 90%;
     background-color: rgb(79, 79, 79);
   overflow-y: scroll;
 }
+
+
 
 .bottom {
   height: 10%;
@@ -190,9 +196,34 @@ li a:hover {
     height: 3%;
 }
 
+.friend_button_image {
+      border-radius: 20%;
+  margin-right: 5%;
+
+  width: auto;
+    height: 40%;
+
+
+}
+.friend_button_holder {
+  padding: 2% 2%;
+  margin: 2% 2%;
+  color: white;
+
+}
+
+.friend_button_holder:hover {
+  background-color: rgb(70, 70, 70);
+}
+
 .notification_image_holder {
   padding: 0.5% 0.5%;
   display: flex;
+}
+
+.friend_button_holder {
+    padding: 0.5% 0.5%;
+    display: flex;
 }
 
 .notification_text_holder {

@@ -68,7 +68,6 @@ const analytics = getAnalytics(app);
 const database = getDatabase(app);
 
 
-
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
 
   throw new Error("Missing Publishable Key")
@@ -85,7 +84,13 @@ function open_app() {
 
 
 function insertParam(key, value) {
-    var refresh = window.location.protocol + "//" + window.location.host + window.location.pathname + '?&' + key + '=' + value;
+    var url_params = "";
+    console.log("--------------------")
+
+    for (var i = 0; i < key.length; i++) {
+        url_params += '?&' + key[i] + '=' + value[i];
+    }
+    var refresh = window.location.protocol + "//" + window.location.host + window.location.pathname + url_params;
     window.history.pushState({ path: refresh }, '', refresh);
 
     LoadBody();
@@ -93,15 +98,52 @@ function insertParam(key, value) {
 }
 
 function friends() {
-    insertParam("location", "friends");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('directMessageLocation');
+    if (page) {
+        insertParam(["location", "directMessageLocation"], ["friends", page]);
+    }
+    else {
+        insertParam(["location", "directMessageLocation"], ["friends", "none"]);
+    }
+
 }
 
 function servers() {
-    insertParam("location", "servers");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('directMessageLocation');
+    if (page) {
+        insertParam(["location", "directMessageLocation"], ["servers", page]);
+    }
+    else {
+        insertParam(["location", "directMessageLocation"], ["servers", "none"]);
+    }
 }
 
 function home() {
-    insertParam("location", "home");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('directMessageLocation');
+    if (page) {
+        insertParam(["location", "directMessageLocation"], ["home", page]);
+    }
+    else {
+        insertParam(["location", "directMessageLocation"], ["home", "none"]);
+    }
+}
+
+function direct_messages() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('directMessageLocation');
+    if (page) {
+        insertParam(["location", "directMessageLocation"], ["direct_messages", page]);
+    }
+    else {
+        insertParam(["location", "directMessageLocation"], ["direct_messages", "none"]);
+    }
 }
 
 function PublicPage() {
@@ -140,6 +182,10 @@ function Nav() {
                 <li>
                     <a onClick={servers}>Servers</a>
                 </li>
+
+                <li>
+                    <a onClick={direct_messages}>Direct Messages</a>
+                </li>
             </ul>
 
         </>
@@ -155,24 +201,34 @@ function LoadBody() {
     const page = urlParams.get('location');
     //console.log(page)
     switch (page) {
-        case "friends":
+        case "friends?":
             document.getElementById("friends").style.display = "block";
                         document.getElementById("home").style.display = "none";
             document.getElementById("servers").style.display = "none";
+            document.getElementById("direct_messages").style.display = "none";
             break
 
-        case "servers":
+        case "servers?":
             document.getElementById("servers").style.display = "block";
             document.getElementById("home").style.display = "none";
             document.getElementById("friends").style.display = "none";
+            document.getElementById("direct_messages").style.display = "none";
                 console.log(page)
             break
+
+        case "direct_messages?":
+            document.getElementById("direct_messages").style.display = "block";
+            document.getElementById("home").style.display = "none";
+            document.getElementById("friends").style.display = "none";
+            document.getElementById("servers").style.display = "none";
+            break;
 
         default:
             // add divs for the different sections of the page
             document.getElementById("home").style.display = "block";
                         document.getElementById("servers").style.display = "none";
             document.getElementById("friends").style.display = "none";
+            document.getElementById("direct_messages").style.display = "none";
                 console.log(page)
             break
 
@@ -469,13 +525,91 @@ function Home() {
 
 }
 
-function DM(props) {
+function FriendButton(props) {
+        return (
+        <>
+            <div className="friend_button_holder">
+                <div className="friend_button_holder">
+                    <img className="friend_button_image" src={props.image} alt=""/>
+                </div>
+                <p className="friend_button_text">{props.name}</p>
+            </div>
+
+        </>
+    )
+}
+
+
+
+function DirectMessages(props) {
+
+    const [pageData, setPageData] = useState([]);
+    const [canRender, setCanRender] = useState(true);
+
+
+    useEffect(() => {
+
+        if (canRender) {
+            setCanRender(false);
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var page = urlParams.get('directMessageLocation');
+
+
+            var new_data = [];
+
+
+            onValue(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), (snapshot) => {
+                var dms = snapshot.val();
+                for (var i = 1; i < dms.length; i++) {
+                    onValue(ref(database, "users/" + dms[i]), (snapshot) => {
+                        var dm = snapshot.val();
+
+
+                        var metadata = JSON.parse(dm.metadata);
+
+                        if (metadata.username == null) {
+                            var name = metadata.firstName;
+                        } else {
+                            var name = metadata.username;
+                        }
+
+                        var image = metadata.imageUrl;
+
+
+                        console.log(image);
+
+                        //Friend_elements.push(<Friend name={name} image={image} status={"test"} key={metadata.id}/>);
+                        new_data.push({"name": name, "image": image, "key": metadata.id});
+
+
+                    });
+                }
+            });
+
+
+
+            setPageData(new_data);
+
+
+
+            setTimeout(() => {
+                setCanRender(true);
+
+            }, 1000);
+        }
+
+    }, []);
+
+
     return (
         <>
             <div id="wrapper" className="wrapper">
                 <div id="flex-container" className="flex-container">
-
-                    <div id="main" className="main">
+                    <div id="left-sidebar" className="leftsidebar">
+                        {pageData.map((data) => (<FriendButton name={data.name} image={data.image} key={data.key}/>))}
+                    </div>
+                    <div id="main" className="main_normal">
 
                     </div>
                     <div id="right-sidebar" className="rightsidebar">
@@ -490,13 +624,7 @@ function DM(props) {
     )
 }
 
-function ServerList() {
-    return (
-        <>
-            <Server name="Server 1" image="https://yt3.ggpht.com/ytc/AOPolaQEUuM48zTRh_cHp0YlffijlEV9xq2Fm50KsEPnIw=s48-c-k-c0x00ffffff-no-rj" desc="test"/>
-        </>
-    )
-}
+
 
 function Friends() {
     const [__friends, setFriends] = useState([]);
@@ -662,6 +790,9 @@ function AppPage() {
             <div id="friends" style={{"display": "none", "height": "93.9%"}}>
                 <Friends/>
             </div>
+            <div id="direct_messages" style={{"display": "none", "height": "93.9%"}}>
+                <DirectMessages/>
+            </div>
 
 
         </>
@@ -713,6 +844,8 @@ function ClerkProviderWithRoutes() {
 
 
 function App() {
+
+
 
     // on the url params change
 
