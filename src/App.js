@@ -25,7 +25,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -66,6 +66,8 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 const database = getDatabase(app);
+
+var direct_message_user = "";
 
 
 if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
@@ -277,7 +279,7 @@ function Notification(props) {
 function Friend(props) {
     return (
         <>
-            <div className="holder">
+            <div className="holder" onClick={(event) => {direct_messages(); openDM(props.name)}}>
                 <div className="notification_holder">
                     <div id="notification_image_holder" className="notification_image_holder">
                         <img className="notification_image" src={props.image} alt="profile"/>
@@ -525,10 +527,181 @@ function Home() {
 
 }
 
+function DM() {
+    const [pageData, _setPageData] = useState([]);
+    const pageDataRef = useRef(pageData);
+    const setPageData = data => {
+        pageDataRef.current = data;
+        _setPageData(data);
+    }
+    const [canRender, setCanRender] = useState(true);
+
+
+
+    useEffect(() => {
+        if ( canRender ) {
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const page = urlParams.get('directMessageLocation');
+
+            onValue(ref(database, 'usersToId/' + page), (snapshot) => {
+                const _data = snapshot.val();
+                if ( _data != null ) {
+                    onValue(ref(database, 'users/' + _data), (snapshot) => {
+                        const data = snapshot.val();
+                        if ( data != null ) {
+                            var friend = data;
+                            var metadata = JSON.parse(friend.metadata);
+                            console.log(metadata);
+                            if (metadata.username == null) {
+                                var name = metadata.firstName;
+                            } else {
+                                var name = metadata.username;
+                            }
+
+                            var image = metadata.imageUrl;
+
+                            var status = friend.status;
+
+                            var new_data = {
+                                "username": page,
+                                "id": _data,
+                                "status": status,
+                                "image": image,
+                                "messages": []
+                            };
+
+                            onValue(ref(database, 'direct_messages/' + localStorage.getItem("userId") + " " + _data), (snapshot) => {
+                                const data = snapshot.val();
+                                if (data != null) {
+                                    var messages = [];
+                                    for (var i = 0; i < Object.keys(data).length; i++) {
+                                        var message = data[Object.keys(data)[i]];
+                                        var date = new Date(message.sentAt);
+                                        var time = date.toLocaleTimeString();
+                                        var date = date.toLocaleDateString();
+
+                                        onValue(ref(database, 'users/' + message.sender), (snapshot) => {
+                                            var __data = {
+                                                "content": message.content,
+                                                "sentAt": time + " " + date,
+                                                "sender": message.sender,
+                                                "image": JSON.parse(snapshot.val().metadata).imageUrl
+                                            };
+                                            new_data['messages'].push(__data);
+                                            setPageData(new_data);
+                                        });
+
+
+
+                                    }
+
+                                } else {
+                                    new_data['messages'] = [];
+                                    setPageData(new_data);
+                                }
+
+
+
+
+
+
+                                document.addEventListener("keydown", function (event) {
+                                    if (event.key === "Enter") {
+                                        if (document.getElementById("dm_input").value != "") {
+                                            var message = document.getElementById("dm_input").value;
+                                            document.getElementById("dm_input").value = "";
+                                            var date = new Date();
+                                            var time = date.getTime();
+                                            var data = {
+                                                "content": message,
+                                                "sentAt": time,
+                                                "senderId": localStorage.getItem("userId"),
+                                                "sender": localStorage.getItem("username")
+                                            };
+
+                                            push(ref(database, 'direct_messages/' + localStorage.getItem("userId") + " " + pageDataRef.current['senderId']), data);
+                                            push(ref(database, 'direct_messages/' + pageDataRef.current['senderId'] + " " + localStorage.getItem("userId")), data);
+
+                                        }
+                                    }
+                                });
+                            });
+
+
+
+                        }
+                    });
+                }
+            });
+
+            setCanRender(false);
+            setTimeout(() => {
+                setCanRender(true);
+            }, 1000);
+        }
+    });
+
+
+
+    console.log(pageData);
+
+    if ( pageData.messages != null ) {
+        // check if enter is pressed
+
+        return (
+            <>
+                <div className="dm_holder">
+                    <div className="dm_header_holder">
+                        <div className="dm_header_image_holder">
+                            <img className="dm_header_image"
+                                 src={pageData.image}
+                                 alt=""/>
+                        </div>
+                        <p className="dm_header_text">{pageData.username}</p>
+                    </div>
+
+                    <div className="dm_message_holder">
+                        {pageData.messages.map((message) => (
+                            <div className="dm_message">
+                                <div className="dm_message_header_holder">
+                                    <img className="dm_message_image" src={message.image} alt=""/>
+                                    <p className="dm_message_header_text">{message.sender}</p>
+                                </div>
+                                <p className="dm_message_time">{message.sentAt}</p>
+                                <br/>
+                                <p className="dm_message_text">{message.content}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="dm_input_holder">
+                        <input className="dm_input" type="text" placeholder="Message" id="dm_input"/>
+                    </div>
+                </div>
+            </>
+        )
+    } else {
+        return (
+            <>
+
+            </>
+        )
+    }
+}
+
+function openDM(name) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('location').replace("?", "");
+    insertParam(["location", "directMessageLocation"], [page, name]);
+}
+
 function FriendButton(props) {
         return (
         <>
-            <div className="friend_button_holder">
+            <div className="friend_button_holder" onClick={(event) => openDM(props.name)}>
                 <div className="friend_button_image_holder">
                     <img className="friend_button_image" src={props.image} alt=""/>
                 </div>
@@ -581,15 +754,13 @@ function DirectMessages(props) {
 
                         //Friend_elements.push(<Friend name={name} image={image} status={"test"} key={metadata.id}/>);
                         new_data.push({"name": name, "image": image, "key": metadata.id});
+                        setPageData(new_data);
 
 
                     });
                 }
             });
 
-
-
-            setPageData(new_data);
 
 
 
@@ -609,8 +780,8 @@ function DirectMessages(props) {
                     <div id="left-sidebar" className="leftsidebar">
                         {pageData.map((data) => (<FriendButton name={data.name} image={data.image} key={data.key}/>))}
                     </div>
-                    <div id="main" className="main_normal">
-
+                    <div id="DM" className="main_normal">
+                        <DM/>
                     </div>
                     <div id="right-sidebar" className="rightsidebar">
 
@@ -755,6 +926,12 @@ function AppPage() {
     const userId = user?.id;
 
     localStorage.setItem("userId", userId);
+    if (user.username == null) {
+        localStorage.setItem("username", user.firstName);
+    }
+    else {
+        localStorage.setItem("username", user.username);
+    }
 
     if (!createdUser) {
         onValue(ref(database, "users/"), (snapshot) => {
@@ -793,6 +970,7 @@ function AppPage() {
             <div id="direct_messages" style={{"display": "none", "height": "93.9%"}}>
                 <DirectMessages/>
             </div>
+
 
 
         </>
