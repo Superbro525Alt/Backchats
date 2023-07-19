@@ -47,23 +47,56 @@ ul {
   padding: .2% .2%;
   overflow: hidden;
   background-color: #333;
-  height: 5.15%;
+  
 }
 
-li {
+.button_divs {
   float: left;
   height: 100%;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 18px 18px;
+.nav_button {
 
-  text-decoration: none;
+    background-color: #333;
+    color: white;
+    font-size: 100%;
+    border: none;
+    cursor: pointer;
+  padding: 18px 18px;
+  text-align: center;
 }
 
+.nav_button:hover {
+
+    background-color: rgb(44, 44, 44);
+
+}
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+  /* The above is shorthand for:
+  flex-grow: 0,
+  flex-shrink: 1,
+  flex-basis: auto
+  */
+}
+
+.box .row._content {
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+}
 .UserButton {
   display: block;
   color: white;
@@ -88,6 +121,7 @@ li a:hover {
 .wrapper {
   position: relative;
   height: 100%;
+  overflow-y: hidden;
 
 }
 
@@ -95,9 +129,14 @@ li a:hover {
 
     text-align: center;
   z-index: -1;
-  transform: translateY(25%) translateX(40%);
+  width: min-content;
+  margin: 0;
+  transform: translate(85%, 5%);
+
 
 }
+
+
 
 .leftsidebar {
   width: 10%;
@@ -129,10 +168,15 @@ li a:hover {
 
 .bottom {
   height: 10%;
+  overflow-y: hidden;
+
   background-color: rgb(26, 26, 26);
 }
 
 .flex-container {
+  margin: 0;
+  padding: 0;
+
   display: flex;
   flex-wrap: wrap;
   background-color: DodgerBlue;
@@ -205,10 +249,21 @@ li a:hover {
 
 
 }
+.friend_button_image_holder {
+  padding: 2% 2%;
+  margin: 2% 2%;
+  color: white;
+  height: 200%;
+
+
+}
+
 .friend_button_holder {
   padding: 2% 2%;
   margin: 2% 2%;
   color: white;
+  height: 10%;
+
 
 }
 

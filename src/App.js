@@ -167,25 +167,25 @@ function Nav() {
 
         <>
             <ul className="horizontal">
-                <li>
-                    <a onClick={home}>Home</a>
-                </li>
-                <li style={{"float": "right"}} className="UserButton">
+                <div className="button_divs">
+                    <button onClick={home} className="nav_button">Home</button>
+                </div>
+                <div style={{"float": "right"}} className="UserButton">
 
                     <UserButton/>
-                </li>
+                </div>
 
-                <li>
-                    <a onClick={friends}>Friends</a>
-                </li>
+                <div className="button_divs">
+                    <button onClick={friends} className="nav_button">Friends</button>
+                </div>
 
-                <li>
-                    <a onClick={servers}>Servers</a>
-                </li>
+                <div className="button_divs">
+                    <button onClick={servers} className="nav_button">Servers</button>
+                </div>
 
-                <li>
-                    <a onClick={direct_messages}>Direct Messages</a>
-                </li>
+                <div className="button_divs">
+                    <button onClick={direct_messages} className="nav_button">Direct Messages</button>
+                </div>
             </ul>
 
         </>
@@ -529,7 +529,7 @@ function FriendButton(props) {
         return (
         <>
             <div className="friend_button_holder">
-                <div className="friend_button_holder">
+                <div className="friend_button_image_holder">
                     <img className="friend_button_image" src={props.image} alt=""/>
                 </div>
                 <p className="friend_button_text">{props.name}</p>
@@ -816,7 +816,7 @@ function ClerkProviderWithRoutes() {
 
       <Routes>
         <Route path="/" element={<PublicPage />} />
-        <Route path="/sign-in/*" element={<div className="wrapper"> <div className="background"></div> <div className="content"> <SignIn routing="path" path="/sign-in" /></div></div>}/>
+          <Route path="/sign-in/*" element={<div className="wrapper"> <div className="background"></div><div className="content"><SignIn routing="path" path="/sign-in" /></div></div>}/>
 
           <Route path="/sign-up/*" element={ <div className="wrapper"> <div className="background"></div> <div className="content"> <SignUp routing="path" path="/sign-up" /> </div></div>}/>
 
