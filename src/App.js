@@ -610,7 +610,14 @@ function DM() {
                                     new_data['messages'] = [];
                                     setPageData(new_data);
                                 }
+                                try {
+                                    var objDiv = document.getElementById("dm_message_holder");
+                                    setTimeout(() => {
+                                        objDiv.scrollTop = objDiv.scrollHeight
+                                    }, 500);
+                                } catch (e) {
 
+                                }
 
 
 
@@ -633,8 +640,7 @@ function DM() {
                                             push(ref(database, 'direct_messages/' + localStorage.getItem("userId") + " " + otherUserIdRef.current), data);
                                             push(ref(database, 'direct_messages/' + otherUserIdRef.current + " " + localStorage.getItem("userId")), data);
 
-                                            var objDiv = document.getElementById("dm_message_holder");
-                                            setTimeout(() => {objDiv.scrollTop = objDiv.scrollHeight}, 500);
+
                                         }
                                     }
                                 });
