@@ -955,7 +955,8 @@ function AppPage() {
                     "metadata": JSON.stringify(user),
                     "servers": [""],
                     "friends": [""],
-                    "status": "online"
+                    "status": "online",
+                    "direct_messages": [""]
                 }).then(r => {
 
                 })
