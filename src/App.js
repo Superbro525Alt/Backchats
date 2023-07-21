@@ -937,6 +937,7 @@ function AppPage() {
     const userId = user?.id;
 
     localStorage.setItem("userId", userId);
+
     if (user.username == null) {
         localStorage.setItem("username", user.firstName);
     }
