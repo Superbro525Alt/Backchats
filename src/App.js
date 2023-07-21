@@ -534,6 +534,14 @@ function DM() {
         pageDataRef.current = data;
         _setPageData(data);
     }
+
+    const [otherUserId, _setOtherUserId] = useState([]);
+    const otherUserIdRef = useRef(otherUserId);
+    const setOtherUserId = data => {
+        otherUserIdRef.current = data;
+        _setOtherUserId(data);
+    }
+
     const [canRender, setCanRender] = useState(true);
 
 
@@ -547,6 +555,7 @@ function DM() {
 
             onValue(ref(database, 'usersToId/' + page), (snapshot) => {
                 const _data = snapshot.val();
+                setOtherUserId(_data);
                 if ( _data != null ) {
                     onValue(ref(database, 'users/' + _data), (snapshot) => {
                         const data = snapshot.val();
@@ -582,7 +591,7 @@ function DM() {
                                         var time = date.toLocaleTimeString();
                                         var date = date.toLocaleDateString();
 
-                                        onValue(ref(database, 'users/' + message.sender), (snapshot) => {
+                                        onValue(ref(database, 'users/' + message.senderId), (snapshot) => {
                                             var __data = {
                                                 "content": message.content,
                                                 "sentAt": time + " " + date,
@@ -621,9 +630,11 @@ function DM() {
                                                 "sender": localStorage.getItem("username")
                                             };
 
-                                            push(ref(database, 'direct_messages/' + localStorage.getItem("userId") + " " + pageDataRef.current['senderId']), data);
-                                            push(ref(database, 'direct_messages/' + pageDataRef.current['senderId'] + " " + localStorage.getItem("userId")), data);
+                                            push(ref(database, 'direct_messages/' + localStorage.getItem("userId") + " " + otherUserIdRef.current), data);
+                                            push(ref(database, 'direct_messages/' + otherUserIdRef.current + " " + localStorage.getItem("userId")), data);
 
+                                            var objDiv = document.getElementById("dm_message_holder");
+                                            setTimeout(() => {objDiv.scrollTop = objDiv.scrollHeight}, 500);
                                         }
                                     }
                                 });
@@ -662,7 +673,7 @@ function DM() {
                         <p className="dm_header_text">{pageData.username}</p>
                     </div>
 
-                    <div className="dm_message_holder">
+                    <div className="dm_message_holder" id="dm_message_holder">
                         {pageData.messages.map((message) => (
                             <div className="dm_message">
                                 <div className="dm_message_header_holder">
@@ -670,7 +681,7 @@ function DM() {
                                     <p className="dm_message_header_text">{message.sender}</p>
                                 </div>
                                 <p className="dm_message_time">{message.sentAt}</p>
-                                <br/>
+
                                 <p className="dm_message_text">{message.content}</p>
                             </div>
                         ))}
