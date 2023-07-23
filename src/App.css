@@ -115,6 +115,40 @@ ul {
 
 }
 
+.popup_holder {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 20%;
+    height: 30%;
+    top: 30%;
+    left: 40%;
+    background-color: rgb(44, 44, 44);
+    border: 1px solid black;
+    border-radius: 5px;
+    z-index: 1;
+  color: white;
+  text-align: center;
+}
+
+.popup_text {
+  text-align: center;
+}
+
+.popup_input {
+
+    width: 80%;
+    height: 35%;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 100%;
+    margin-top: 1%;
+  margin-bottom: 1%;
+
+}
+
+
+
 .dm_holder {
   display: flex;
   flex-direction: column;

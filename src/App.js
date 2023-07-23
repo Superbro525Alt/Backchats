@@ -562,7 +562,6 @@ function DM() {
                         if ( data != null ) {
                             var friend = data;
                             var metadata = JSON.parse(friend.metadata);
-                            console.log(metadata);
                             if (metadata.username == null) {
                                 var name = metadata.firstName;
                             } else {
@@ -610,14 +609,17 @@ function DM() {
                                     new_data['messages'] = [];
                                     setPageData(new_data);
                                 }
-                                try {
-                                    var objDiv = document.getElementById("dm_message_holder");
-                                    setTimeout(() => {
+                                setTimeout(() => {
+                                    try {
+                                        var objDiv = document.getElementById("dm_message_holder");
                                         objDiv.scrollTop = objDiv.scrollHeight
-                                    }, 500);
-                                } catch (e) {
 
-                                }
+                                    } catch (e) {
+                                        //ignore error
+                                    }
+
+                                }, 500);
+
 
 
 
@@ -662,7 +664,6 @@ function DM() {
 
 
 
-    console.log(pageData);
 
     if ( pageData.messages != null ) {
         // check if enter is pressed
@@ -718,7 +719,7 @@ function openDM(name) {
 function FriendButton(props) {
         return (
         <>
-            <div className="friend_button_holder" onClick={(event) => openDM(props.name)}>
+            <div className="friend_button_holder" onClick={(event) => openDM(props.name)} id={props.id}>
                 <div className="friend_button_image_holder">
                     <img className="friend_button_image" src={props.image} alt=""/>
                 </div>
@@ -729,30 +730,77 @@ function FriendButton(props) {
     )
 }
 
+function Popup(props) {
 
+    return (
+        <>
+            <div className="popup_holder">
+                <div className="popup">
+                    <p className="popup_text">{props.text}</p>
+
+
+                    <input className="popup_input" id={props.inputID}  type="text" placeholder={props.placeholder}/>
+
+                    <div className="popup_button_holder">
+                        <MenuButtonRound name="Ok" onClick={() => {props.onClick();}}/>
+                        <MenuButtonRound name="Cancel" onClick={() => {document.getElementById(props.id).style.display = "none"}}/>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+function _addDM() {
+    var done = false;
+    var name = document.getElementById("dm_name_input").value;
+    if (name != "") {
+        onValue(ref(database, "usersToId/" + name), (snapshot) => {
+          var id = snapshot.val();
+            if (id != null) {
+               push(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), id);
+               document.getElementById("add_dm_popup").style.display = "none";
+
+            }
+        })
+    }
+}
+
+
+
+function addDM() {
+    // make a popup
+    document.getElementById("add_dm_popup").style.display = "block";
+}
 
 function DirectMessages(props) {
 
     const [pageData, setPageData] = useState([]);
-    const [canRender, setCanRender] = useState(true);
+    const [_canRender, _setCanRender] = useState(true);
 
 
     useEffect(() => {
-
-        if (canRender) {
-            setCanRender(false);
+        console.log(_canRender);
+        if (_canRender) {
             var queryString = window.location.search;
             var urlParams = new URLSearchParams(queryString);
             var page = urlParams.get('directMessageLocation');
 
 
             var new_data = [];
+            setPageData([]);
+
+
 
 
             onValue(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), (snapshot) => {
                 var dms = snapshot.val();
-                for (var i = 1; i < dms.length; i++) {
-                    onValue(ref(database, "users/" + dms[i]), (snapshot) => {
+                console.log(dms);
+                for (var i = 0; i < Object.values(dms).length; i++) {
+                    if (Object.values(dms)[i] == "") {
+                        continue;
+                    }
+                    onValue(ref(database, "users/" + Object.values(dms)[i]), (snapshot) => {
                         var dm = snapshot.val();
 
 
@@ -767,38 +815,47 @@ function DirectMessages(props) {
                         var image = metadata.imageUrl;
 
 
-                        console.log(image);
+
 
                         //Friend_elements.push(<Friend name={name} image={image} status={"test"} key={metadata.id}/>);
                         new_data.push({"name": name, "image": image, "key": metadata.id});
                         setPageData(new_data);
+                        // for each key in the dat remove anything with that key
+
 
 
                     });
                 }
+                _setCanRender(false);
+                setTimeout(() => {
+                    _setCanRender(true);
+
+                }, 100);
             });
 
 
 
 
-            setTimeout(() => {
-                setCanRender(true);
 
-            }, 1000);
         }
 
     }, []);
 
+    console.log(pageData);
 
     return (
         <>
             <div id="wrapper" className="wrapper">
                 <div id="flex-container" className="flex-container">
                     <div id="left-sidebar" className="leftsidebar">
-                        {pageData.map((data) => (<FriendButton name={data.name} image={data.image} key={data.key}/>))}
+                        <MenuButton name="Add DM" onClick={addDM} />
+                        {pageData.map((data) => ( <FriendButton name={data.name} image={data.image} key={data.key} id={data.key}/>))}
                     </div>
                     <div id="DM" className="main_normal">
                         <DM/>
+                        <div id="add_dm_popup" style={{"display": "none"}}>
+                            <Popup text="Add DM" inputText="User's Name" placeholder="Username" inputID="dm_name_input" onClick={_addDM} id="add_dm_popup"/>
+                        </div>
                     </div>
                     <div id="right-sidebar" className="rightsidebar">
 
@@ -827,7 +884,6 @@ function Friends() {
                     onValue(ref(database, `users/${_friends[i]}`), (snapshot) => {
                         var friend = snapshot.val();
                         var metadata = JSON.parse(friend.metadata);
-                        console.log(metadata);
                         if (metadata.username == null) {
                             var name = metadata.firstName;
                         } else {
@@ -837,8 +893,6 @@ function Friends() {
                         var image = metadata.imageUrl;
 
                         var status = friend.status;
-
-                        console.log(image);
 
                         //Friend_elements.push(<Friend name={name} image={image} status={"test"} key={metadata.id}/>);
                         friendsData.push({"name": name, "image": image, "status": status, "key": metadata.id});
@@ -954,7 +1008,7 @@ function AppPage() {
     if (!createdUser) {
         onValue(ref(database, "users/"), (snapshot) => {
             var data = snapshot.val();
-            console.log(data);
+
             if (data[userId] == null) {
                 if (createdUser) return;
                 createdUser = true;
@@ -969,6 +1023,12 @@ function AppPage() {
                 })
             }
         });
+        if (user.username == null) {
+            set(ref(database, `usersToId/${user.firstName}`), user.id)
+
+        } else {
+            set(ref(database, `usersToId/${user.username}`), user.id);
+        }
     }
 
     setTimeout(LoadBody, 10);
