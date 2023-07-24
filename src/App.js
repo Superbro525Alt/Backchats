@@ -736,7 +736,7 @@ function Popup(props) {
         <>
             <div className="popup_holder">
                 <div className="popup">
-                    <p className="popup_text">{props.text}</p>
+                    <p className="popup_text" id="popup_text">{props.text}</p>
 
 
                     <input className="popup_input" id={props.inputID}  type="text" placeholder={props.placeholder}/>
@@ -758,12 +758,26 @@ function _addDM() {
         onValue(ref(database, "usersToId/" + name), (snapshot) => {
           var id = snapshot.val();
             if (id != null) {
-               push(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), id);
-               document.getElementById("add_dm_popup").style.display = "none";
+                // if the user is not already in your dms list
+                onValue(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), (snapshot) => {
+                    if (snapshot.val() != null) {
+                        if (!Object.values(snapshot.val()).includes(id)) {
+                            push(ref(database, "users/" + localStorage.getItem("userId") + "/direct_messages"), id);
+                            push(ref(database, "users/" + id + "/direct_messages"), localStorage.getItem("userId"));
+                            document.getElementById("add_dm_popup").style.display = "none";
+                            return;
+                        }
+                    }
+                    return
+                });
 
             }
+            document.getElementById("popup_text").innerHTML = "Add DM <b>(User does not exist)</b>";
+            return
+
         })
     }
+    document.getElementById("popup_text").innerHTML = "Add DM <b>(Provide a name)</b>";
 }
 
 

@@ -6,6 +6,8 @@
   height: 100%;
 }
 
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -120,7 +122,7 @@ ul {
     flex-direction: column;
     position: absolute;
     width: 20%;
-    height: 30%;
+
     top: 30%;
     left: 40%;
     background-color: rgb(44, 44, 44);
@@ -305,7 +307,8 @@ li a:hover {
     width: 100%;
     background-color: rgb(44, 44, 44);
     color: white;
-    font-size: 16px;
+
+    font-size: 1vw;
     border: none;
     cursor: pointer;
   padding: 18px 18px;
@@ -316,7 +319,7 @@ li a:hover {
     width: 100%;
     background-color: rgb(44, 44, 44);
     color: white;
-    font-size: 16px;
+    font-size: 1.1vw;
     border: none;
     cursor: pointer;
   padding: 18px 18px;
@@ -355,7 +358,7 @@ li a:hover {
     border-radius: 20%;
   margin-right: 0.5%;
   width: 3%;
-    height: 3%;
+    height: 100%;
 }
 
 .friend_button_image {
@@ -479,21 +482,21 @@ li a:hover {
 
 .settings_section_title {
   color: white;
-  font-size: 20px;
+  font-size: 1.6vw;
   margin: 0;
   padding: 0;
 }
 
 .settings_section_text {
   color: white;
-  font-size: 16px;
+  font-size: 1.2vw;
   margin: 0;
   padding: 0.5% 0;
 }
 
 .settings_section_text_header {
   color: white;
-  font-size: 19px;
+  font-size: 1.4vw;
   margin: 0;
   padding-top: 0.5%;
 }
@@ -510,7 +513,7 @@ li a:hover {
 }
 .file-upload-wrapper:after {
   content: attr(data-text);
-  font-size: 18px;
+  font-size: 1.5vw;
   position: absolute;
   top: 0;
   left: 0;
@@ -538,7 +541,7 @@ li a:hover {
   color: #fff;
   font-weight: 700;
   z-index: 25;
-  font-size: 16px;
+  font-size: 1.2vw;
   line-height: 45px;
   padding: 0 15px;
   text-transform: uppercase;
