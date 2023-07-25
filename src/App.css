@@ -331,6 +331,35 @@ li a:hover {
     background-color: #111;
 }
 
+.menu_row_button {
+  background-color: rgb(44, 44, 44);
+  color: white;
+  font-size: 1.1vw;
+  border: none;
+  cursor: pointer;
+  padding: 18px 18px;
+  margin-left: 1%;
+  margin-right: 1%;
+  text-align: center;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.menu_row_button:hover {
+    background-color: #111;
+}
+
+
+
+
+.friends_menu_holder {
+  display: flex;
+  padding: 0.5%;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  background-color: #5d5d5d;
+
+}
 .menu_button:hover {
     background-color: #111;
 }

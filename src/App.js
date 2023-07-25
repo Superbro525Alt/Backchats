@@ -736,7 +736,7 @@ function Popup(props) {
         <>
             <div className="popup_holder">
                 <div className="popup">
-                    <p className="popup_text" id="popup_text">{props.text}</p>
+                    <p className="popup_text" id={props.textID}>{props.text}</p>
 
 
                     <input className="popup_input" id={props.inputID}  type="text" placeholder={props.placeholder}/>
@@ -868,7 +868,7 @@ function DirectMessages(props) {
                     <div id="DM" className="main_normal">
                         <DM/>
                         <div id="add_dm_popup" style={{"display": "none"}}>
-                            <Popup text="Add DM" inputText="User's Name" placeholder="Username" inputID="dm_name_input" onClick={_addDM} id="add_dm_popup"/>
+                            <Popup text="Add DM" inputText="User's Name" placeholder="Username" inputID="dm_name_input" id="add_dm_popup"  onClick={_addDM} textID="popup_text"/>
                         </div>
                     </div>
                     <div id="right-sidebar" className="rightsidebar">
@@ -883,7 +883,38 @@ function DirectMessages(props) {
     )
 }
 
+function addFriend() {
+    // make a popup
+    document.getElementById("add_friend_popup").style.display = "block";
+}
 
+function _addFriend() {
+
+}
+
+function MenuRowButton(props) {
+    return (
+        <>
+            <button onClick={props.onClick()} className="menu_row_button">{props.name}</button>
+        </>
+    )
+}
+
+function viewPending() {
+
+}
+
+function viewFriends() {
+
+}
+
+function viewBlocked() {
+
+}
+
+function viewRequests() {
+
+}
 
 function Friends() {
     const [__friends, setFriends] = useState([]);
@@ -929,6 +960,20 @@ function Friends() {
                 <div id="flex-container" className="flex-container">
 
                     <div id="main" className="main">
+                        <div id="friends_menu_holder" className="friends_menu_holder">
+                            <MenuRowButton name="Pending" onClick={viewPending}/>
+                            <MenuRowButton name="Requests" onClick={viewRequests}/>
+                            <MenuRowButton name="Friends" onClick={viewFriends}/>
+                            <MenuRowButton name="Blocked" onClick={viewBlocked}/>
+                        </div>
+
+                        <MenuButtonRound name="Add Friend" onClick={addFriend}/>
+
+
+
+                        <div id="add_friend_popup" style={{"display": "none"}}>
+                            <Popup text="Add Friend" id="add_friend_popup" inputText="User's Name" placeholder="Username" inputID="friend_name_input" onClick={_addFriend} textID="add_friend_popup_heading"/>
+                        </div>
                         {__friends.map((___friend) => (<Friend name={___friend.name} image={___friend.image} status={___friend.status} key={___friend.key}/>))}
                     </div>
                     <div id="right-sidebar" className="rightsidebar">
